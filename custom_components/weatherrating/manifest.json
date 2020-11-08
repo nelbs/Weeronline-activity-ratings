@@ -1,6 +1,6 @@
 {
-  "domain": "weatherratings",
-  "name": "weatherratings",
+  "domain": "weatherrating",
+  "name": "weatherrating",
   "documentation": "https://www.example.com",
   "requirements": [
     "bs4==0.0.1"
