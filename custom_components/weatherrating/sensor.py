@@ -16,7 +16,7 @@ _LOGGER = logging.getLogger(__name__)
 
 ATTRIBUTION = 'Information provided by Weeronline.nl'
 
-DEFAULT_NAME = 'Weather ratings'
+DEFAULT_NAME = 'Weatherrating'
 
 SCAN_INTERVAL = datetime.timedelta(seconds=3600)
 
@@ -31,9 +31,9 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 def setup_platform(hass, config, add_entities, discovery_info=None):
     url = config.get(CONF_URL)
     name = config.get(CONF_NAME)
-    add_entities([Weercijfer(url, name)], True)
+    add_entities([Weatherrating(url, name)], True)
 
-class Weercijfer(RestoreEntity):
+class weatherrating(RestoreEntity):
     def __init__(self, url, name):
         # initialiseren sensor
         self._url = url
