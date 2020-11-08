@@ -1,0 +1,5 @@
+{
+  "name": "Weather ratings",
+  "domains": "sensor",
+  "render_readme": true
+}
