@@ -33,14 +33,14 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     name = config.get(CONF_NAME)
     add_entities([Weatherrating(url, name)], True)
 
-class weatherrating(RestoreEntity):
+class Weatherrating(RestoreEntity):
     def __init__(self, url, name):
         # initialiseren sensor
         self._url = url
         self._name = name
         self._state = 0
-        self._attributes = {'running': None, 'walking': None, 'bicycle': None, 'barbeque': None,
-                            'beach': None, 'terrace': None, 'gold': None, 'winterSport': None, 'tennis': None,
+        self._attributes = {'running': None, 'walking': None, 'bicycle': None, 'barbecue': None,
+                            'beach': None, 'terrace': None, 'golf': None, 'winterSport': None, 'tennis': None,
                             'waterSport': None}
         self.update()
 
@@ -51,7 +51,7 @@ class weatherrating(RestoreEntity):
     @property
     def unit_of_measurement(self):
         # Return the unit of measurement of this entity, if any.
-        return 'm3'
+        return 
 
     @property
     def state(self):
@@ -65,12 +65,12 @@ class weatherrating(RestoreEntity):
     @property
     def icon(self):
         # Icon to use in the frontend.
-        return 'mdi:chart-line'
+        return 'mdi:bike'
 
     def update(self):
         import requests
         from bs4 import BeautifulSoup
-        response = requests.get(self.url)
+        response = requests.get(self._url)
         data = BeautifulSoup(response.text, 'html.parser')
 
         activities = []
