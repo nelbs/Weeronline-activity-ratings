@@ -38,17 +38,17 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     add_entities([Weatherrating(url, name, activity)], True)
 
 class Weatherrating(RestoreEntity):
-    def __init__(self, url, name, activiy):
+    def __init__(self, url, name, activity):
         # initialiseren sensor
         self._url = url
         self._name = name
-        self._activity = activiy
+        self._activity = activity
         self._state = 0
         self._attributes = {'running': None, 'walking': None, 'bicycle': None, 'barbecue': None,
                             'beach': None, 'terrace': None, 'golf': None, 'winterSport': None, 'tennis': None,
                             'waterSport': None}
-        if activiy not in self._attributes:
-            _LOGGER.error('Activity ' + str(activiy) + ' does not exist. Possible activities are: running, walking, bicycle, barbeque, beach, terrace, golf, wintersport, tennis and waterSport')
+        if activity not in self._attributes:
+            _LOGGER.error('Activity ' + str(activity) + ' does not exist. Possible activities are: running, walking, bicycle, barbeque, beach, terrace, golf, wintersport, tennis and waterSport')
         self.update()
 
     @property
