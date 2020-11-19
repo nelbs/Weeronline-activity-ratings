@@ -1,9 +1,15 @@
 # Weather ratings
-This platform scrapes the weather ratings of a few activities from weeronline.nl. It creates the folowing sensors:
-
-- sensor.weatherratings 
-
-The sensors are updated daily since the data is based on daily gas consumption.
+This platform scrapes the weather activity ratings from weeronline.nl. The ratings for the following activities are included as attributes of a sensor.
+- Running
+- Walking
+- Bicycle
+- Barbeque
+- Beach
+- Terrace
+- Golf
+- Wintersport
+- Tennis
+- Watersport
 
 ## HACS Installation
 1. Make sure you've installed [HACS](https://hacs.xyz/docs/installation/prerequisites)
@@ -16,6 +22,9 @@ The sensors are updated daily since the data is based on daily gas consumption.
 ```yaml
 sensor:
   - platform: weatherratings
-    url: url
-    name: name
+    url: 'https://www.weeronline.nl/Europa/Frankrijk/Parijs/4266446'
+    name: 'weatherratings'
+    type: 'tennis'
 ```
+
+All the activity ratings are stored as attributes. The state of the sensor is set by the type entry.
