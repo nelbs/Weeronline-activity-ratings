@@ -7,7 +7,7 @@ import voluptuous as vol
 from homeassistant.util import dt
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import (
-    ATTR_ATTRIBUTION, CONF_NAME, CONF_SCAN_INTERVAL, CONF_URL)
+    ATTR_ATTRIBUTION, CONF_NAME, CONF_SCAN_INTERVAL, CONF_URL, CONF_ACTIVITY)
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.restore_state import RestoreEntity
@@ -18,30 +18,37 @@ ATTRIBUTION = 'Information provided by Weeronline.nl'
 
 DEFAULT_NAME = 'Weatherrating'
 
-SCAN_INTERVAL = datetime.timedelta(seconds=3600)
+DEFAULT_ACTIVITY = 'bicycle'
+
+SCAN_INTERVAL = datetime.timedelta(seconds=300)
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_URL): cv.string,
     vol.Optional(CONF_SCAN_INTERVAL, default=SCAN_INTERVAL):
         cv.time_period,
     vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
+    vol.Optional(CONF_ACTIVITY, default=DEFAULT_ACTIVITY): cv.string,
 })
 
 
 def setup_platform(hass, config, add_entities, discovery_info=None):
     url = config.get(CONF_URL)
     name = config.get(CONF_NAME)
-    add_entities([Weatherrating(url, name)], True)
+    activity = config.get(CONF_ACTIVITY)
+    add_entities([Weatherrating(url, name, activity)], True)
 
 class Weatherrating(RestoreEntity):
-    def __init__(self, url, name):
+    def __init__(self, url, name, activiy):
         # initialiseren sensor
         self._url = url
         self._name = name
+        self._activity = activiy
         self._state = 0
         self._attributes = {'running': None, 'walking': None, 'bicycle': None, 'barbecue': None,
                             'beach': None, 'terrace': None, 'golf': None, 'winterSport': None, 'tennis': None,
                             'waterSport': None}
+        if activiy not in self._attributes:
+            _LOGGER.error('Activity ' + str(activiy) + ' does not exist. Possible activities are: running, walking, bicycle, barbeque, beach, terrace, golf, wintersport, tennis and waterSport')
         self.update()
 
     @property
@@ -65,7 +72,18 @@ class Weatherrating(RestoreEntity):
     @property
     def icon(self):
         # Icon to use in the frontend.
-        return 'mdi:bike'
+        icon_dic = {'running': 'mdi:run-fast',
+                    'walking': 'mdi:walk',
+                    'bicycle': 'mdi:bike',
+                    'barbecue': 'mdi:grill',
+                    'beach': 'mdi:beach',
+                    'terrace': 'mdi:glass-cocktail',
+                    'golf': 'mdi:golf',
+                    'winterSport': 'mdi:ski',
+                    'tennis': 'mdi:tennis',
+                    'waterSport': 'mdi:ski-water'}
+                            
+        return icon_dic.get(self._activity)
 
     def update(self):
         import requests
@@ -84,7 +102,7 @@ class Weatherrating(RestoreEntity):
                     activities.append(img['alt'])
                 i += 1
         result = dict(zip(activities, ratings))
-        self._state = result.get('bicycle')
+        self._state = result.get(self._activity)
         for activity in activities:
             self._attributes[activity] = result.get(activity)
 
