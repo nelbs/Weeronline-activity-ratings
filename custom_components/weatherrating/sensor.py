@@ -7,7 +7,7 @@ import voluptuous as vol
 from homeassistant.util import dt
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import (
-    ATTR_ATTRIBUTION, CONF_NAME, CONF_SCAN_INTERVAL, CONF_URL, CONF_ACTIVITY)
+    ATTR_ATTRIBUTION, CONF_NAME, CONF_SCAN_INTERVAL, CONF_URL, CONF_TYPE)
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.restore_state import RestoreEntity
@@ -18,7 +18,7 @@ ATTRIBUTION = 'Information provided by Weeronline.nl'
 
 DEFAULT_NAME = 'Weatherrating'
 
-DEFAULT_ACTIVITY = 'bicycle'
+DEFAULT_TYPE = 'bicycle'
 
 SCAN_INTERVAL = datetime.timedelta(seconds=300)
 
@@ -27,14 +27,14 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_SCAN_INTERVAL, default=SCAN_INTERVAL):
         cv.time_period,
     vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
-    vol.Optional(CONF_ACTIVITY, default=DEFAULT_ACTIVITY): cv.string,
+    vol.Optional(CONF_TYPE, default=DEFAULT_TYPE): cv.string,
 })
 
 
 def setup_platform(hass, config, add_entities, discovery_info=None):
     url = config.get(CONF_URL)
     name = config.get(CONF_NAME)
-    activity = config.get(CONF_ACTIVITY)
+    activity = config.get(CONF_TYPE)
     add_entities([Weatherrating(url, name, activity)], True)
 
 class Weatherrating(RestoreEntity):
@@ -90,7 +90,6 @@ class Weatherrating(RestoreEntity):
         from bs4 import BeautifulSoup
         response = requests.get(self._url)
         data = BeautifulSoup(response.text, 'html.parser')
-
         activities = []
         ratings = []
         i = 1
