@@ -15,8 +15,8 @@ This platform scrapes the weather activity ratings from https://www.weeronline.n
 1. Make sure you've installed [HACS](https://hacs.xyz/docs/installation/prerequisites)
 2. In the integrations tab, search for weatherratings.
 3. Install the Integration.
+4. Go to https://www.weeronline.nl/, search your city and copy the url
 4. Add weatherratings entry to configuration (see below)
-
 
 ## Configuration
 ```yaml
@@ -27,4 +27,7 @@ sensor:
     type: 'tennis'
 ```
 
-All the activity ratings are stored as attributes. The state of the sensor is set by the type entry.
+url: weeronline url of the location you want (required)
+name: name of the sensor  (optional) default=weatherratings
+type: activity which will be used as the state of the sensor (optional) default=bicycle
+
