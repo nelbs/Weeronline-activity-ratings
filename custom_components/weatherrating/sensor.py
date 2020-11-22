@@ -102,6 +102,5 @@ class Weatherrating(RestoreEntity):
                 i += 1
         result = dict(zip(activities, ratings))
         self._state = result.get(self._activity)
-        _LOGGER.error('rating for ' + str(self._activity) + ' is ' + str(self._state))
         for activity in activities:
             self._attributes[activity] = result.get(activity)
