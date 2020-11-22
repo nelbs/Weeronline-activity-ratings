@@ -27,7 +27,7 @@ sensor:
     type: 'tennis'
 ```
 
-- url: weeronline url of the location you want (required)
+- url: weeronline url of the location (required)
 - name: name of the sensor  (optional) default=weatherratings
 - type: activity which will be used as the state of the sensor (optional) default=bicycle
 
