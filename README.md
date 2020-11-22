@@ -1,5 +1,5 @@
 # Weeronline activity ratings
-This platform scrapes the weather activity ratings from weeronline.nl. The ratings for the following activities are included as attributes of a sensor.
+This platform scrapes the weather activity ratings from [weeronline.nl]. The ratings for the following activities are included as attributes of a sensor.
 - Running
 - Walking
 - Bicycle
