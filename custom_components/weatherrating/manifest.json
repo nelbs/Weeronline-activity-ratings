@@ -1,6 +1,7 @@
 {
   "domain": "weatherrating",
   "name": "weatherrating",
+  "version": "0.1",
   "documentation": "https://github.com/nelbs/Weeronline-activity-ratings",
   "requirements": [
     "bs4==0.0.1"
