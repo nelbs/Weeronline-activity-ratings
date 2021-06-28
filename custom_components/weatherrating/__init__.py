@@ -1,3 +1,3 @@
-"""Mindergas Sensor."""
+"""Weeronline activity ratings Sensor."""
 
 __version__ = '0.0.1'
