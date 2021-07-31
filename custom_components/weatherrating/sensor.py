@@ -44,9 +44,8 @@ class Weatherrating(RestoreEntity):
         self._name = name
         self._activity = activity
         self._state = 0
-        self._attributes = {'running': None, 'walking': None, 'bicycle': None, 'barbecue': None,
-                            'beach': None, 'terrace': None, 'golf': None, 'winterSport': None, 'tennis': None,
-                            'waterSport': None}
+        self._attributes = {'Hardlopen': None, 'Golf': None, 'Watersport': None, 'Wandelen': None, 'Tennis': None, 'Fietsen': None,
+                            'Terras': None, 'Barbecue': None, 'Strand': None}
         if activity not in self._attributes:
             _LOGGER.error('Activity ' + str(activity) + ' does not exist. Possible activities are: running, walking, bicycle, barbeque, beach, terrace, golf, wintersport, tennis and waterSport')
         self.update()
@@ -72,35 +71,37 @@ class Weatherrating(RestoreEntity):
     @property
     def icon(self):
         # Icon to use in the frontend.
-        icon_dic = {'running': 'mdi:run-fast',
-                    'walking': 'mdi:walk',
-                    'bicycle': 'mdi:bike',
-                    'barbecue': 'mdi:grill',
-                    'beach': 'mdi:beach',
-                    'terrace': 'mdi:glass-cocktail',
-                    'golf': 'mdi:golf',
-                    'winterSport': 'mdi:ski',
-                    'tennis': 'mdi:tennis',
-                    'waterSport': 'mdi:ski-water'}
+        icon_dic = {'Hardlopen': 'mdi:run-fast',
+                    'Wandelen': 'mdi:walk',
+                    'Fietsen': 'mdi:bike',
+                    'Barbeque': 'mdi:grill',
+                    'Strand': 'mdi:beach',
+                    'Terras': 'mdi:glass-cocktail',
+                    'Golf': 'mdi:golf',
+                    'Tennis': 'mdi:tennis',
+                    'Watersport': 'mdi:ski-water'}
                             
         return icon_dic.get(self._activity)
 
     def update(self):
         import requests
         from bs4 import BeautifulSoup
-        response = requests.get(self._url)
+
+        activity_ratings = list()
+        activities = list()
+        response = requests.get(self._url + '/activiteiten')
         data = BeautifulSoup(response.text, 'html.parser')
-        activities = []
-        ratings = []
-        i = 1
-        for div in data.find_all('div', class_="wol-activities-module__activity___2okN7"):
-            for img in div.find_all('img', alt=True):
-                if i % 2 == 0:
-                    ratings.append(int((img['alt']).rsplit("_")[1]))
-                else:
-                    activities.append(img['alt'])
-                i += 1
-        result = dict(zip(activities, ratings))
-        self._state = result.get(self._activity)
+        # Get activity ratings
+        for div in data.find_all('div', class_="styled__Grades-sc-1plaa7g-7 guwBGH"):
+            for img in div.find('span', class_="Icon__Container-glcq76-0 ckAteM"):
+                activity_ratings.append(int(img['alt'].rsplit("_")[1]))
+
+        # Get activities
+        for div in data.find_all('div', class_="styled__ActivityLabel-sc-1plaa7g-6 cplFdr"):
+            activities.append(div.text)
+
+        activity_dict = dict(zip(activities, activity_ratings))
+
+        self._state = activity_dict.get(self._activity)
         for activity in activities:
-            self._attributes[activity] = result.get(activity)
+            self._attributes[activity] = activity_dict.get(activity)
